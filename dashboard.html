@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard | Tf Store</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #0f1117;
+      color: #f0f0f0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .dashboard-container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 200px;
+      background: linear-gradient(145deg, #1a73e8, #4fc3f7);
+      padding: 20px 15px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.4);
+      overflow-y: auto;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 40px;
+      color: white;
+      text-shadow: 0 0 8px rgba(255,255,255,0.3);
+    }
+
+    .menu a {
+      color: #e0f0ff;
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .menu a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    .menu a.active {
+      background-color: rgba(255,255,255,0.2);
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .logout-btn {
+      margin-top: 20px;
+      background: #ff4444;
+      text-align: center;
+      color: white;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px #ff4444cc;
+      transition: background-color 0.2s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #e93333;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    header {
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin: 0;
+      color: #4fc3f7;
+      text-shadow: 0 0 12px #4fc3f7aa;
+    }
+
+    header p {
+      margin-top: 8px;
+      color: #aaa;
+      font-size: 0.95rem;
+    }
+
+    .cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background-color: #1c1f26;
+      padding: 20px;
+      border-radius: 12px;
+      flex: 1 1 300px;
+      box-shadow: 0 0 12px rgba(79, 195, 247, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(79, 195, 247, 0.5);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+      color: #4fc3f7;
+    }
+
+    .placeholder {
+      background-color: #2b2e35;
+      color: #aaa;
+      font-size: 1.05rem;
+      font-weight: 600;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="logo">Tf Store</div>
+      <nav class="menu">
+        <a href="dashboard.html" class="active">대시보드</a>
+        <a href="buy.html">구매 하기</a>
+        <a href="store.html">구매 로그</a>
+        <a href="settings.html">설정</a>
+        <a href="users.html">사용자 관리</a>
+        <a href="grades.html">등급 관리</a>
+        <a href="coupon.html">쿠폰 관리</a>
+        <a href="notice.html">공지사항</a>
+        <a href="recharge.html">충전 페이지</a>
+        <a href="auto-recharge.html">자동 충전</a>
+        <a href="webhook.html">디스코드 웹훅 설정</a>
+        <a href="invite.html">초대 링크 관리</a>
+        <a href="login.html" class="logout-btn">로그아웃</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <h1>Dashboard</h1>
+        <p id="login-time">최근 로그인: 확인 중...</p>
+      </header>
+
+      <section class="cards">
+        <div class="card">
+          <h2>수익 내역</h2>
+          <div class="placeholder">수정 중</div>
+        </div>
+
+        <div class="card">
+          <h2>구매 내역</h2>
+          <div class="placeholder">수정 중</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const loginTime = localStorage.getItem("loginTime");
+    const display = document.getElementById("login-time");
+
+    if (loginTime) {
+      display.textContent = "최근 로그인: " + new Date(Number(loginTime)).toLocaleString('ko-KR');
+    } else {
+      const now = Date.now();
+      localStorage.setItem("loginTime", now);
+      display.textContent = "최근 로그인: " + new Date(now).toLocaleString('ko-KR');
+    }
+  </script>
+</body>
+</html>
