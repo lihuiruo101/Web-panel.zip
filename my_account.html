@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>프로필 설정</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .container {
+      background: #111;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 150, 0.2);
+      width: 320px;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #222;
+      color: #fff;
+      margin-bottom: 15px;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: #222;
+      background-size: cover;
+      background-position: center;
+      margin: 0 auto 15px;
+      cursor: pointer;
+      border: 2px dashed #444;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 10px;
+      color: #f55;
+      height: 1.2em;
+      font-size: 0.9em;
+    }
+
+    .footer {
+      margin-top: 30px;
+      color: #555;
+      font-size: 12px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>프로필 설정</h1>
+  <div class="container">
+    <input type="text" id="user-id" placeholder="아이디 확인" />
+    <div class="profile-pic" id="profile-pic" title="클릭해서  이미지 선택"></div>
+    <input type="file" id="file-input" accept="image/*" />
+    <button id="save-btn">다음</button>
+    <div class="message" id="msg"></div>
+  </div>
+  <div class="footer">Made by CHROMATIC</div>
+
+  <script>
+    const userIdInput = document.getElementById('user-id');
+    const profilePic = document.getElementById('profile-pic');
+    const fileInput = document.getElementById('file-input');
+    const saveBtn = document.getElementById('save-btn');
+    const msg = document.getElementById('msg');
+
+    const currentUser = localStorage.getItem('currentUser');
+    const savedProfile = localStorage.getItem(`profile_${currentUser}`);
+
+    if (!currentUser) {
+      alert("로그인이 필요합니다.");
+      window.location.href = "login.html";
+    }
+
+    // 기존 프로필 이미지 불러오기
+    if (savedProfile) {
+      profilePic.style.backgroundImage = `url(${savedProfile})`;
+    } else {
+      profilePic.style.backgroundImage = 'url("https://via.placeholder.com/120/000000/FFFFFF?text=No+Image")';
+    }
+
+    profilePic.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          profilePic.style.backgroundImage = `url(${reader.result})`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    saveBtn.addEventListener('click', () => {
+      const inputId = userIdInput.value.trim();
+      if (inputId !== currentUser) {
+        msg.textContent = "아이디가 일치하지 않아 진행할 수 없 습니다.";
+        return;
+      }
+
+      const bgImg = profilePic.style.backgroundImage;
+      if (bgImg && bgImg !== 'none') {
+        const base64 = bgImg.slice(5, -2); // remove url("...") wrapper
+        localStorage.setItem(`profile_${currentUser}`, base64);
+      } else {
+        localStorage.removeItem(`profile_${currentUser}`);
+      }
+
+      // 저장 완료 후 대시보드로 이동
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>
