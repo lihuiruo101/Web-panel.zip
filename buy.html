@@ -1,0 +1,308 @@
+<!DOCTYPE html>  <html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>상품 구매 | Tf store</title>
+<style>
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #121212;
+    color: #eee;
+  }
+  .dashboard-container {
+    display: flex;
+    height: 100vh;
+  }
+  .sidebar {
+    background: linear-gradient(135deg, #1a73e8, #4fc3f7);
+    width: 160px;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 3px 0 10px rgba(0,0,0,0.5);
+  }
+  .logo {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 30px;
+    text-align: center;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px rgba(255,255,255,0.7);
+  }
+  .menu a {
+    display: block;
+    color: #d0e8ff;
+    text-decoration: none;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-shadow: 0 0 2px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .menu a.active {
+    background-color: rgba(255,255,255,0.15);
+    color: #fff;
+    font-weight: 800;
+    pointer-events: none;
+    cursor: default;
+  }
+  .menu a.logout-btn {
+    margin-top: auto;
+    background-color: #ff3b3b;
+    color: white !important;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    box-shadow: 0 0 6px #ff3b3baa;
+    transition: background-color 0.2s ease;
+  }
+  .menu a.logout-btn:hover {
+    background-color: #ff1a1a;
+  }  main {
+flex-grow: 1;
+padding: 30px 25px 20px 25px;
+overflow-y: auto;
+background: radial-gradient(#0f0f0f 0%, #0a0a0a 100%);
+position: relative;
+}
+header h1 {
+margin: 0 0 6px;
+font-weight: 900;
+font-size: 1.8rem;
+color: #4fc3f7;
+text-shadow: 0 0 12px #4fc3f7aa;
+}
+header p {
+margin: 0 0 25px;
+color: #a0cfff;
+font-size: 0.95rem;
+font-weight: 600;
+user-select: none;
+}
+
+.product-list {
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+}
+.product-card {
+background: #222;
+border-radius: 12px;
+padding: 15px;
+width: 280px;
+box-shadow: 0 0 15px rgba(79,195,247,0.4);
+display: flex;
+flex-direction: column;
+}
+.product-image {
+width: 100%;
+height: 160px;
+border-radius: 10px;
+object-fit: cover;
+background-color: #111;
+margin-bottom: 10px;
+}
+.product-name {
+font-size: 1.2rem;
+font-weight: 700;
+color: #4fc3f7;
+margin-bottom: 6px;
+}
+.product-desc {
+flex-grow: 1;
+font-size: 0.9rem;
+color: #ccc;
+margin-bottom: 10px;
+white-space: pre-wrap;
+}
+.product-price {
+font-size: 1rem;
+font-weight: 700;
+color: #90caf9;
+margin-bottom: 12px;
+}
+.btn-group {
+display: flex;
+justify-content: space-between;
+}
+.purchase-btn, .delete-btn {
+border: none;
+border-radius: 8px;
+padding: 8px 16px;
+font-weight: 700;
+cursor: pointer;
+user-select: none;
+transition: background-color 0.3s ease;
+}
+.purchase-btn {
+background-color: #1a73e8;
+color: white;
+}
+.purchase-btn:hover {
+background-color: #1565c0;
+}
+.delete-btn {
+background-color: #e53935;
+color: white;
+display: none; /* 기본 숨김 /
+}
+.delete-btn:hover {
+background-color: #b71c1c;
+}
+/ 관리자 전용 플러스 버튼 /
+#add-product-btn {
+position: fixed;
+right: 30px;
+bottom: 30px;
+background-color: #0f9d58;
+color: white;
+font-size: 2.5rem;
+font-weight: 900;
+border-radius: 50%;
+width: 56px;
+height: 56px;
+border: none;
+cursor: pointer;
+box-shadow: 0 6px 12px rgba(15, 157, 88, 0.7);
+display: none; / 기본 숨김 */
+align-items: center;
+justify-content: center;
+line-height: 0;
+user-select: none;
+transition: background-color 0.3s ease;
+}
+#add-product-btn:hover {
+background-color: #0b7d43;
+}
+</style>
+
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="logo">Tf store</div>
+      <nav class="menu">
+        <a href="dashboard.html">대시보드</a>
+        <a href="buy.html" class="active">구매하기</a>
+        <a href="store.html">구매 로그</a>
+        <a href="coupon.html">쿠폰 관리</a>
+        <a href="settings.html">설정</a>
+        <a href="users.html">사용자 관리</a>
+        <a href="grades.html">등급 관리</a>
+        <a href="notice.html">공지사항</a>
+        <a href="recharge.html">충전</a>
+        <a href="auto-recharge.html">자동 충전</a>
+        <a href="invite.html">초대 링크 관리</a>
+        <a href="login.html" class="logout-btn">로그아웃</a>
+      </nav>
+    </aside>  <main>
+  <header>
+    <h1>구매하기</h1>
+    <p>최근 상품을 구매하세요!</p>
+  </header>
+
+  <div class="product-list" id="product-list">
+    <!-- 상품 카드가 동적으로 추가됩니다 -->
+  </div>
+
+  <!-- 관리자 전용 상품 추가 버튼 -->
+  <button id="add-product-btn" title="상품 추가">+</button>
+</main>
+
+  </div>  <script>
+  const currentUser = localStorage.getItem('currentUser') || '';
+  const addProductBtn = document.getElementById('add-product-btn');
+  const productList = document.getElementById('product-list'); 
+
+  // 저장된 상품 배열 불러오기 (최신순으로 보여주기)
+  let products = JSON.parse(localStorage.getItem('products')) || [];
+  products.reverse();
+
+  // 관리자일 경우 플러스 버튼 보임, 삭제 버튼도 각 카드에 표시
+  const isAdmin = (currentUser === 'lihuiruo1');
+  if (isAdmin) {
+    addProductBtn.style.display = 'flex';
+  }
+
+  function renderProducts() {
+    productList.innerHTML = '';
+    if (products.length === 0) {
+      productList.innerHTML = `<p style="color:#777; font-size:1.2rem; text-align:center; width:100%; margin-top:40px;">
+        구매 가능한 상품이 없습니다.
+      </p>`;
+      return;
+    }
+
+    products.forEach((product, index) => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+
+      const img = document.createElement('img');
+      img.className = 'product-image';
+      img.src = product.image || 'https://via.placeholder.com/280x160?text=No+Image';
+      img.alt = product.name;
+      card.appendChild(img);
+
+      const name = document.createElement('div');
+      name.className = 'product-name';
+      name.textContent = product.name;
+      card.appendChild(name);
+
+      const desc = document.createElement('div');
+      desc.className = 'product-desc';
+      desc.textContent = product.description || '설명 없음';
+      card.appendChild(desc);
+
+      const price = document.createElement('div');
+      price.className = 'product-price';
+      price.textContent = `₩${Number(product.price).toLocaleString()}`;
+      card.appendChild(price);
+
+      const btnGroup = document.createElement('div');
+      btnGroup.className = 'btn-group';
+
+      // 구매하기 버튼
+      const purchaseBtn = document.createElement('button');
+      purchaseBtn.className = 'purchase-btn';
+      purchaseBtn.textContent = '구매하기';
+      purchaseBtn.addEventListener('click', () => {
+        window.location.href = 'buy_host.html';
+      });
+      btnGroup.appendChild(purchaseBtn);
+
+      // 삭제 버튼 (관리자만 보임)
+      if (isAdmin) {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.style.display = 'inline-block';
+        deleteBtn.textContent = '삭제';
+        deleteBtn.addEventListener('click', () => {
+          if(confirm(`"${product.name}" 상품을 삭제하 시겠습니 까?`)) {
+            products.splice(products.length - 1 - index, 1); // 원본 배열 기준 삭제
+            localStorage.setItem('products', JSON.stringify(products.reverse()));
+            products = JSON.parse(localStorage.getItem('products')) || [];
+            products.reverse();
+            renderProducts();
+          }
+        });
+        btnGroup.appendChild(deleteBtn);
+      }
+
+      card.appendChild(btnGroup);
+      productList.appendChild(card);
+    });
+  }
+
+  addProductBtn.addEventListener('click', () => {
+    window.location.href = 'add_product.html';
+  });
+
+  renderProducts();
+</script>  </body>
+</html>
