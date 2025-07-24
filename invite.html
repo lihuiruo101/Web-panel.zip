@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>초대 링크 공유 | TF 스토어</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #0f1117;
+      color: #f0f0f0;
+      height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: linear-gradient(145deg, #1a73e8, #4fc3f7);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 40px;
+      color: white;
+      text-shadow: 0 0 8px rgba(255,255,255,0.3);
+    }
+
+    .menu a {
+      color: #e0f0ff;
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: block;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .menu a:hover {
+      background-color: rgba(255,255,255,0.15);
+    }
+
+    .menu a.active {
+      background-color: rgba(255,255,255,0.25);
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 40px;
+      overflow-y: auto;
+      background: linear-gradient(135deg, #121416, #1c1f26);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #4fc3f7;
+      text-shadow: 0 0 10px #4fc3f7aa;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #1a1d23;
+      color: #fff;
+      font-size: 1rem;
+      box-shadow: inset 0 0 8px #4fc3f7aa;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    button {
+      margin-top: 25px;
+      background-color: #1a73e8;
+      color: white;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 15px #4fc3f7aa;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+    }
+
+    .notice {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">TF 스토어</div>
+    <nav class="menu">
+      <a href="dashboard.html">대시보드</a>
+      <a href="buy.html">구매 하기</a>
+      <a href="store.html">구매 로그</a>
+      <a href="settings.html">설정</a>
+      <a href="users.html">사용자 관리</a>
+      <a href="grades.html">등급 관리</a>
+      <a href="coupon.html">쿠폰 관리</a>
+      <a href="notice.html">공지사항</a>
+      <a href="recharge.html">충전 페이지</a>
+      <a href="auto-recharge.html">자동 충전</a>
+      <a href="webhook.html">디스코드 웹훅 설정</a>
+      <a href="invite.html" class="active">초대 링크 관리</a>
+      <a href="login.html" class="logout-btn">로그아웃</a>
+    </nav>
+  </div>
+
+  <div class="main-content">
+    <h1>초대 링크 공유</h1>
+
+    <label for="invite-text">초대 메시지</label>
+    <textarea id="invite-text" placeholder="예: 아래 서버로 들 어오세요!"></textarea>
+
+    <label for="invite-link">초대 링크</label>
+    <input type="text" id="invite-link" readonly value="https://tfstore.example.com/invite?code=ABCDEFG123" />
+
+    <button onclick="shareInvite()">공유하기</button>
+    <div class="notice" id="notice"></div>
+  </div>
+
+  <script>
+    function shareInvite() {
+      const text = document.getElementById('invite-text').value.trim();
+      const url = document.getElementById('invite-link').value;
+      const fullText = text ? `${text}\n\n${url}` : url;
+
+      if (navigator.share) {
+        navigator.share({
+          title: 'TF 스토어 초대',
+          text: fullText,
+          url: url
+        }).then(() => {
+          showNotice('공유 성공!');
+        }).catch(err => {
+          showNotice('공유 취소 또는 실패');
+          console.error(err);
+        });
+      } else {
+        copyToClipboard(fullText);
+        showNotice('복사 완료! 붙여넣기로 공유하세요.');
+      }
+    }
+
+    function copyToClipboard(str) {
+      const textarea = document.createElement('textarea');
+      textarea.value = str;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+
+    function showNotice(msg) {
+      const notice = document.getElementById('notice');
+      notice.textContent = msg;
+      setTimeout(() => { notice.textContent = ''; }, 3000);
+    }
+  </script>
+</body>
+</html>
