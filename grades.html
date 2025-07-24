@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>등급 관리 | TF 스토어</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      margin: 0; padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #0f1117;
+      color: #f0f0f0;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: linear-gradient(145deg, #1a73e8, #4fc3f7);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.4);
+      user-select: none;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 50px;
+      color: white;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+      letter-spacing: 2px;
+    }
+
+    .menu a {
+      color: #e0f0ff;
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      display: block;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    }
+
+    .menu a:hover {
+      background-color: rgba(255,255,255,0.15);
+      box-shadow: 0 0 15px rgba(79, 195, 247, 0.8);
+    }
+
+    .menu a.active {
+      background-color: rgba(255,255,255,0.3);
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 0 20px #4fc3f7;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      background: #ff4444;
+      text-align: center;
+      color: white;
+      font-weight: 700;
+      padding: 12px 0;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ff4444cc;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #e93333;
+      box-shadow: 0 0 18px #ff2a2a;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 40px 50px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #121416, #1c1f26);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #4fc3f7;
+      text-shadow: 0 0 15px #4fc3f7cc;
+      user-select: none;
+    }
+
+    .grade-list {
+      max-width: 600px;
+      margin-bottom: 40px;
+      background-color: #23272e;
+      border-radius: 16px;
+      padding: 20px 30px;
+      box-shadow: 0 0 25px rgba(79, 195, 247, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .grade-item {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #d0e8ff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      background-color: #1a1d23;
+      user-select: none;
+    }
+
+    .no-grades {
+      font-size: 1.2rem;
+      color: #888;
+      text-align: center;
+      padding: 60px 0;
+      user-select: none;
+    }
+
+    form {
+      max-width: 600px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      background-color: #23272e;
+      border-radius: 16px;
+      padding: 20px 30px;
+      box-shadow: 0 0 25px rgba(79, 195, 247, 0.3);
+    }
+
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: none;
+      font-size: 1.1rem;
+      background-color: #1a1d23;
+      color: #d0e8ff;
+      box-shadow: inset 0 0 8px #4fc3f7aa;
+      outline: none;
+      transition: box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: inset 0 0 12px #4fc3f7ff;
+    }
+
+    button {
+      padding: 12px 28px;
+      background-color: #1a73e8;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 0 20px #4fc3f7aa;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+      box-shadow: 0 0 30px #4fc3f7ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">TF 스토어</div>
+    <nav class="menu">
+      <a href="dashboard.html">대시보드</a>
+      <a href="buy.html">구매 하기</a>
+      <a href="store.html">구매 로그</a>
+      <a href="settings.html">설정</a>
+      <a href="users.html">사용자 관리</a>
+      <a href="grades.html" class="active">등급 관리</a>
+      <a href="coupon.html">쿠폰 관리</a>
+      <a href="notice.html">공지사항</a>
+      <a href="recharge.html">충전 페이지</a>
+      <a href="auto-recharge.html">자동 충전</a>
+      <a href="webhook.html">디스코드 웹훅 설정</a>
+      <a href="invite.html">초대 링크 관리</a>
+      <a href="login.html" class="logout-btn">로그아웃</a>
+    </nav>
+  </div>
+
+  <div class="main-content">
+    <h1>등급 관리</h1>
+
+    <div class="grade-list" id="grade-list">
+      <!-- 등급 목록이 여기 표시됩니다 -->
+    </div>
+
+    <form id="add-grade-form">
+      <input type="text" id="grade-name" placeholder="새 등급  이름 입력" maxlength="20" required />
+      <button type="submit">등급 추가</button>
+    </form>
+  </div>
+
+  <script>
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser !== 'lihuiruo1') {
+      alert('접근 권한이 없습니다.');
+      location.href = 'dashboard.html';
+    }
+
+    const gradeListEl = document.getElementById('grade-list');
+    const form = document.getElementById('add-grade-form');
+    const gradeNameInput = document.getElementById('grade-name');
+
+    function loadGrades() {
+      return JSON.parse(localStorage.getItem('grades')) || [];
+    }
+
+    function saveGrades(grades) {
+      localStorage.setItem('grades', JSON.stringify(grades));
+    }
+
+    function renderGrades() {
+      const grades = loadGrades();
+      gradeListEl.innerHTML = '';
+
+      if (grades.length === 0) {
+        const noGradesMsg = document.createElement('div');
+        noGradesMsg.className = 'no-grades';
+        noGradesMsg.textContent = '등록된 등급이 없습니다.';
+        gradeListEl.appendChild(noGradesMsg);
+        return;
+      }
+
+      grades.forEach(grade => {
+        const gradeItem = document.createElement('div');
+        gradeItem.className = 'grade-item';
+        gradeItem.textContent = grade;
+        gradeListEl.appendChild(gradeItem);
+      });
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const newGrade = gradeNameInput.value.trim();
+      if (!newGrade) return;
+
+      let grades = loadGrades();
+      if (grades.includes(newGrade)) {
+        alert('이미 등록된 등급입니다.');
+        return;
+      }
+
+      grades.push(newGrade);
+      saveGrades(grades);
+      renderGrades();
+      gradeNameInput.value = '';
+    });
+
+    renderGrades();
+  </script>
+</body>
+</html>
