@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>쿠폰 관리 | TF 스토어</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #121418;
+      color: #e0e6f0;
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 230px;
+      background: linear-gradient(145deg, #1a73e8, #4fc3f7);
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 10px rgba(0,0,0,0.4);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 40px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    .menu a {
+      color: #f0faff;
+      text-decoration: none;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      display: block;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+
+    .menu a:hover {
+      background-color: rgba(255,255,255,0.15);
+    }
+
+    .menu a.active {
+      background-color: rgba(255,255,255,0.3);
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 0 10px #4fc3f7;
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      background: #ff4444;
+      color: white;
+      padding: 12px;
+      text-align: center;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #e93333;
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 40px 50px;
+      background: linear-gradient(135deg, #181a1f, #20242d);
+      overflow-y: auto;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      margin-bottom: 30px;
+      color: #4fc3f7;
+      text-shadow: 0 0 10px #4fc3f777;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section h2 {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      color: #a0cfff;
+    }
+
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 12px 16px;
+      background-color: #1e222a;
+      color: #d0e8ff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      box-shadow: inset 0 0 5px rgba(79,195,247,0.4);
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: inset 0 0 8px rgba(79,195,247,0.7);
+    }
+
+    button {
+      background-color: #1a73e8;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(79,195,247,0.4);
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+      box-shadow: 0 0 15px rgba(79,195,247,0.8);
+    }
+
+    .coupon-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .coupon-item {
+      background: #232830;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(79,195,247,0.2);
+      font-size: 1.1rem;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .coupon-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 18px rgba(79,195,247,0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">TF 스토어</div>
+    <nav class="menu">
+      <a href="dashboard.html">대시보드</a>
+      <a href="buy.html">구매 하기</a>
+      <a href="store.html">구매 로그</a>
+      <a href="settings.html">설정</a>
+      <a href="users.html">사용자 관리</a>
+      <a href="grades.html">등급 관리</a>
+      <a href="coupon.html" class="active">쿠폰 관리</a>
+      <a href="notice.html">공지사항</a>
+      <a href="recharge.html">충전</a>
+      <a href="auto-recharge.html">자동 충전</a>
+      <a href="webhook.html">웹훅 설정</a>
+      <a href="invite.html">초대 링크</a>
+      <a href="login.html" class="logout-btn">로그아웃</a>
+    </nav>
+  </div>
+  <div class="main">
+    <h1>쿠폰 관리</h1>
+
+    <div id="admin-panel" class="section" style="display: none;">
+      <h2>관리자 기능</h2>
+      <div class="input-group">
+        <input type="text" id="new-coupon" placeholder="쿠폰 이름 입력">
+        <button onclick="createCoupon()">쿠폰 생성</button>
+      </div>
+      <div class="input-group">
+        <input type="text" id="target-user" placeholder="지급할 사용자 아이디">
+        <button onclick="grantCoupon()">쿠폰 지급</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>사용 가능한 쿠폰</h2>
+      <div class="coupon-list" id="coupon-list">
+        <!-- 쿠폰 목록이 들어옵니다 -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const currentUser = localStorage.getItem('currentUser');
+    const isAdmin = currentUser === 'lihuiruo1';
+    const adminPanel = document.getElementById('admin-panel');
+    const couponList = document.getElementById('coupon-list');
+
+    if (isAdmin) adminPanel.style.display = 'block';
+
+    function loadCoupons() {
+      return JSON.parse(localStorage.getItem('coupons') || '[]');
+    }
+
+    function saveCoupons(coupons) {
+      localStorage.setItem('coupons', JSON.stringify(coupons));
+    }
+
+    function createCoupon() {
+      const name = document.getElementById('new-coupon').value.trim();
+      if (!name) return alert('쿠폰 이름을 입력하세요.');
+      const coupons = loadCoupons();
+      if (coupons.find(c => c.name === name)) {
+        return alert('이미 존재하는 쿠폰입니다.');
+      }
+      coupons.push({ name, users: [] });
+      saveCoupons(coupons);
+      renderCoupons();
+      alert('쿠폰이 생성되었습니다.');
+    }
+
+    function grantCoupon() {
+      const name = document.getElementById('new-coupon').value.trim();
+      const userId = document.getElementById('target-user').value.trim();
+      if (!name || !userId) return alert('정보를 모두 입력하세 요.');
+      const coupons = loadCoupons();
+      const coupon = coupons.find(c => c.name === name);
+      if (!coupon) return alert('해당 쿠폰이 없습니다.');
+      if (!coupon.users.includes(userId)) {
+        coupon.users.push(userId);
+        saveCoupons(coupons);
+        alert('쿠폰을 지급했습니다.');
+      } else {
+        alert('이미 지급된 사용자입니다.');
+      }
+    }
+
+    function renderCoupons() {
+      const coupons = loadCoupons();
+      couponList.innerHTML = '';
+      coupons.forEach(coupon => {
+        if (isAdmin || coupon.users.includes(currentUser)) {
+          const el = document.createElement('div');
+          el.className = 'coupon-item';
+          el.textContent = coupon.name;
+          couponList.appendChild(el);
+        }
+      });
+    }
+
+    renderCoupons();
+  </script>
+</body>
+</html>
