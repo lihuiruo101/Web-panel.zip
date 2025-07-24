@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>구매 로그 | Tf Store</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #0f1117;
+      color: #f0f0f0;
+      height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 200px;
+      background: linear-gradient(145deg, #1a73e8, #4fc3f7);
+      padding: 20px 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 40px;
+      color: white;
+    }
+
+    .menu a {
+      color: #e0f0ff;
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .menu a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    .menu a.active {
+      background-color: rgba(255,255,255,0.2);
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .logout-btn {
+      margin-top: 20px;
+      background: #ff4444;
+      text-align: center;
+      color: white;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .logout-btn:hover {
+      background-color: #e93333;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chat-log {
+      flex-grow: 1;
+      overflow-y: auto;
+      background: #1a1d24;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .log-entry {
+      margin-bottom: 16px;
+      padding: 12px;
+      background-color: #2a2e38;
+      border-radius: 8px;
+    }
+
+    .input-box {
+      display: flex;
+      margin-top: 20px;
+    }
+
+    .input-box textarea {
+      flex: 1;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      resize: none;
+      background-color: #2a2e38;
+      color: white;
+    }
+
+    .input-box button {
+      margin-left: 10px;
+      padding: 10px 16px;
+      background-color: #0f9d58;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .input-box button:hover {
+      background-color: #0b7d43;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">Tf Store</div>
+    <nav class="menu">
+      <a href="dashboard.html">대시보드</a>
+      <a href="buy.html">구매 하기</a>
+      <a href="store.html" class="active">구매 로그</a>
+      <a href="settings.html">설정</a>
+      <a href="users.html">사용자 관리</a>
+      <a href="grades.html">등급 관리</a>
+      <a href="coupon.html">쿠폰 관리</a>
+      <a href="notice.html">공지사항</a>
+      <a href="recharge.html">충전 페이지</a>
+      <a href="auto-recharge.html">자동 충전</a>
+      <a href="webhook.html">디스코드 웹훅 설정</a>
+      <a href="invite.html">초대 링크 관리</a>
+      <a href="login.html" class="logout-btn">로그아웃</a>
+    </nav>
+  </div>
+
+  <div class="main-content">
+    <div class="chat-log" id="chatLog"></div>
+
+    <div class="input-box" id="inputBox">
+      <textarea id="logInput" placeholder="구매 로그를 입력하세요..." rows="2"></textarea>
+      <button id="sendBtn">전송</button>
+    </div>
+  </div>
+
+  <script>
+    const currentUser = localStorage.getItem("currentUser") || '';
+    const chatLog = document.getElementById("chatLog");
+    const inputBox = document.getElementById("inputBox");
+    const logInput = document.getElementById("logInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    // 마크다운 변환 (간단히)
+    function markdownToHTML(text) {
+      return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>');
+    }
+
+    // 관리자 외 숨기기
+    if (currentUser !== 'lihuiruo1') {
+      inputBox.style.display = 'none';
+    }
+
+    function renderLogs() {
+      const logs = JSON.parse(localStorage.getItem('purchaseLogs') || '[]');
+      chatLog.innerHTML = '';
+      logs.forEach(log => {
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = markdownToHTML(log);
+        chatLog.appendChild(entry);
+      });
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    sendBtn.onclick = () => {
+      const text = logInput.value.trim();
+      if (!text) return;
+      const logs = JSON.parse(localStorage.getItem('purchaseLogs') || '[]');
+      logs.push(text);
+      localStorage.setItem('purchaseLogs', JSON.stringify(logs));
+      logInput.value = '';
+      renderLogs();
+    };
+
+    renderLogs();
+  </script>
+</body>
+</html>
